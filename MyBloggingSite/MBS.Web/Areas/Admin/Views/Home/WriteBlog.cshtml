@@ -1,0 +1,22 @@
+﻿@model MBS.Web.Areas.Admin.Models.Blog
+@{
+    ViewData["Title"] = "WriteBlog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container bg-dark-subtle">
+    <h3 class="text-center m-3">Post a blog</h3>
+    <form asp-area="Admin" asp-controller="Home" asp-action="WriteBlog" method="post">
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label">Title</label>
+            <input asp-for="Title" type="text" class="form-control" id="title" placeholder="Add a Title to your blog">
+        </div>
+        <div class="mb-3">
+            <label asp-for="Article" class="form-label">What's on your mind</label>
+            <textarea asp-for="Article" class="form-control" id="blog" rows="10"></textarea>
+        </div>
+        <div class="mb-3 text-end">
+            <button type="submit" class="btn btn-primary px-5 mb-3">Post</button>
+        </div>
+    </form>
+</div>

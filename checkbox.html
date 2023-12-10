@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkbox Uncheck on Outside Click</title>
+  <style>
+    /* Just for styling purposes */
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <label><input type="checkbox" class="my-checkbox"> Checkbox 1</label>
+  <label><input type="checkbox" class="my-checkbox"> Checkbox 2</label>
+  <label><input type="checkbox" class="my-checkbox"> Checkbox 3</label>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get all checkboxes with the specified class
+      const checkboxes = document.querySelectorAll('.my-checkbox');
+
+      // Add click event listener to the document
+      document.addEventListener('click', function (event) {
+        // Check if the clicked element is not a checkbox
+        if (!event.target.matches('.my-checkbox')) {
+          // Uncheck all checkboxes
+          checkboxes.forEach(function (checkbox) {
+            checkbox.checked = false;
+          });
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

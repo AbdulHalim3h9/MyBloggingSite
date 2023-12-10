@@ -1,18 +1,40 @@
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 using MBS.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MBS.Web;
+using MBS.Infrastructure.DbContexts;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var assemblyName = Assembly.GetExecutingAssembly().FullName;
+
+
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+//builder.Services.AddDbContext<BlogDbContext>(options =>
+//    options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<BlogDbContext>(options =>
+    options.UseSqlServer(connectionString, m => m.MigrationsAssembly(assemblyName)));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<BlogDbContext>();
 builder.Services.AddControllersWithViews();
+
+//Configuring Di Container
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+// Call ConfigureContainer on the Host sub property 
+builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterModule(new WebModule());
+});
 
 var app = builder.Build();
 
@@ -34,6 +56,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

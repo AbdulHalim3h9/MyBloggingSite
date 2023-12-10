@@ -1,0 +1,12 @@
+﻿@model Blog
+@{
+    ViewData["Title"] = "GetBlog";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- blog -->
+<div class="container-md">
+    <h2 class="m-auto text-center pt-5">@Model.Title</h2>
+    <p class="py-4">@Model.Article</p>
+</div>
+
