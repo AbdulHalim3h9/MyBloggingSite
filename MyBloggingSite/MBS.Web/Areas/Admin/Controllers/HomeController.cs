@@ -5,6 +5,7 @@ using DO = MBS.Infrastructure.Entities.Blog;
 using BO = MBS.Web.Areas.Admin.Models.Blog;
 using MBS.Infrastructure.Repositories;
 using MBS.Web.Controllers;
+using AutoMapper;
 
 namespace MBS.Web.Areas.Admin.Controllers
 {
@@ -12,9 +13,11 @@ namespace MBS.Web.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         private BlogRepository _blogRepository;
-        public HomeController(BlogRepository br)
+        private IMapper _mapper;
+        public HomeController(BlogRepository br, IMapper mapper)
         {
             _blogRepository = br;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
@@ -28,12 +31,14 @@ namespace MBS.Web.Areas.Admin.Controllers
         [HttpPost,ValidateAntiForgeryToken]
         public IActionResult WriteBlog(BO blog)
         {
-            DO bl = new DO();
-            bl.Title = blog.Title;
-            bl.Article = blog.Article;
-            _blogRepository.Insert(bl);
+            //DO bl = new DO();
+                
+
+            //bl.Title = blog.Title;
+            //bl.Article = blog.Article;
+            _blogRepository.Insert(_mapper.Map<DO>(blog));
             _blogRepository.Save();
-            return View();
+            return RedirectToAction("showblogs", "home");
         }
         public IActionResult ShowBlogs()
         {
@@ -42,18 +47,18 @@ namespace MBS.Web.Areas.Admin.Controllers
         public IActionResult EditBlog(Guid id)
         {
             var blog = _blogRepository.GetById(id);
-            BO bo = new BO();
-            bo.Title = blog.Title;
-            bo.Article = blog.Article;
+            BO bo = _mapper.Map<BO>(blog);
+            //bo.Title = blog.Title;
+            //bo.Article = blog.Article;
             return View(bo);
         }
         [HttpPost,ValidateAntiForgeryToken]
         public IActionResult EditBlog(BO blogModel)
         {
-            var blEntity = new DO();
-            blEntity.Id = blogModel.Id;
-            blEntity.Title = blogModel.Title;
-            blEntity.Article = blogModel.Article;
+            var blEntity = _mapper.Map<DO>(blogModel);
+            //blEntity.Id = blogModel.Id;
+            //blEntity.Title = blogModel.Title;
+            //blEntity.Article = blogModel.Article;
 
             _blogRepository.Update(blEntity);
             _blogRepository.Save();

@@ -4,6 +4,7 @@ using MBS.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MBS.Web;
+using MBS.Infrastructure;
 using MBS.Infrastructure.DbContexts;
 using System.Reflection;
 
@@ -34,7 +35,10 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 {
     builder.RegisterModule(new WebModule());
+    builder.RegisterModule(new InfrastructureModule(connectionString, assemblyName));
 });
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
