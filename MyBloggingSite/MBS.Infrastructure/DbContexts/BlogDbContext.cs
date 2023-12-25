@@ -1,4 +1,5 @@
 ﻿using MBS.Infrastructure.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MBS.Infrastructure.DbContexts
 {
-    public class BlogDbContext : IdentityDbContext
+    public class BlogDbContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Blog> Blogs { get; set; }
         public BlogDbContext(DbContextOptions<BlogDbContext> options)
